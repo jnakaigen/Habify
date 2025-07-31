@@ -1,0 +1,12 @@
+Landing.jsx → user clicks Get Started → goes to Dashboard
+
+Dashboard.jsx → displays habits (HabitCard) using data from LocalStorage → clicking a habit toggles its state and triggers SVG growth
+
+AddHabit.jsx → uses AddHabitForm to create a new habit → saved to LocalStorage → redirects to Dashboard
+
+Settings.jsx → allows theme switching (ThemeToggle) and potentially habit reset
+
+PlantProgress.jsx → chooses which SVG (sprout, plant, blooming) to render based on habit completion streak
+
+Install Tailwind css intellisense extension
+npm install reads your package.json and downloads all dependencies (React, Tailwind, PostCSS, etc.)

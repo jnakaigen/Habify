@@ -1,0 +1,7 @@
+@keyframes grow {
+  0% { transform: scale(0.5); opacity: 0.3; }
+  100% { transform: scale(1); opacity: 1; }
+}
+.plant-grow {
+  animation: grow 0.8s ease-in-out forwards;
+}
