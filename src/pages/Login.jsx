@@ -8,7 +8,7 @@ export default function Login() {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-
+    
     // Dummy validation: just check something entered
     if (!email.trim() || !password.trim()) {
       alert("Bro, don’t leave fields empty!");

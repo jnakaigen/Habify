@@ -6,7 +6,7 @@ const Landing = () => {
 
   const handleLogin = () => {
     // Redirect to login (or dashboard for now)
-    navigate("/dashboard");
+    navigate("/login");
   };
 
   return (
