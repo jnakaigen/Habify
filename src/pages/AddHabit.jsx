@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { PlusCircle, RefreshCw, Calendar, Moon, Trash2, Edit, X } from "lucide-react";
 import toast, { Toaster } from "react-hot-toast";
+import Layout from '../components/Layout';
 import { useNavigate, useLocation } from "react-router-dom";
 
 const AddHabit = () => {
@@ -84,6 +85,7 @@ const AddHabit = () => {
   };
 
   return (
+    <Layout>
     <div className="min-h-screen w-full flex items-center justify-center bg-gradient-to-br from-green-50 to-white dark:from-gray-900 dark:to-gray-800 px-4">
       <Toaster position="bottom-center" />
 
@@ -265,6 +267,7 @@ const AddHabit = () => {
         </div>
       </div>
     </div>
+    </Layout>
   );
 };
 
