@@ -3,8 +3,12 @@ import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import Lenis from "@studio-freight/lenis";
 import Lottie from "lottie-react";
+import { useNavigate } from "react-router-dom";
+import { Flame } from "lucide-react";
 import plantAnimation from "../assets/animations/plantgrowth.json";
 import "../styles/tailwind.css";
+import HabitCard from "../components/HabitCard";
+import toast from "react-hot-toast";
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -26,47 +30,22 @@ const spawnLeafParticles = (container) => {
   }, 16);
 };
 
-const HabitList = ({ habits, toggleHabit }) => (
-  <ul className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-6">
-    {habits.map((habit) => (
-      <li
-        key={habit.id}
-        className={`p-4 rounded-xl border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-900 hover:shadow-lg hover:scale-105 transition-all flex flex-col items-center justify-center ${
-          habit.completed ? "ring-2 ring-green-400" : ""
-        }`}
-      >
-        <span
-          className={`text-lg font-medium mb-2 transition-colors ${
-            habit.completed ? "line-through text-green-600" : ""
-          }`}
-        >
-          {habit.title}
-        </span>
-        <input
-          type="checkbox"
-          checked={habit.completed}
-          onChange={() => toggleHabit(habit.id)}
-          aria-label={`Mark ${habit.title} as completed`}
-          className="w-6 h-6 cursor-pointer accent-green-600 transform scale-110 hover:scale-125 transition-transform"
-        />
-      </li>
-    ))}
-  </ul>
-);
-
 const Dashboard = () => {
+  const navigate = useNavigate();
   const userEmail = localStorage.getItem("userEmail");
-  const [habits, setHabits] = useState([
-    { id: 1, title: "Drink 2L Water", completed: false, streak: 3 },
-    { id: 2, title: "Meditate 10 min", completed: false, streak: 5 },
-    { id: 3, title: "Read 20 pages", completed: false, streak: 2 },
-    { id: 4, title: "Workout", completed: false, streak: 7 },
-    { id: 5, title: "No Junk Food", completed: false, streak: 1 },
-  ]);
-
   const containerRef = useRef(null);
 
- useEffect(() => {
+  const [habits, setHabits] = useState(() => {
+    const stored = localStorage.getItem("habits");
+    return stored ? JSON.parse(stored) : [
+      { id: 1, name: "Drink 2L Water", emoji: "💧", completed: false, streak: 3 },
+      { id: 2, name: "Meditate 10 min", emoji: "🧘‍♂️", completed: false, streak: 5 },
+    ];
+  });
+
+  const [quote, setQuote] = useState("");
+
+  useEffect(() => {
     if (!userEmail) return;
     const stored = localStorage.getItem(`habits_${userEmail}`);
     if (stored) {
@@ -84,15 +63,6 @@ const Dashboard = () => {
     localStorage.setItem(`habits_${userEmail}`, JSON.stringify(habits));
   }, [habits, userEmail]);
 
-  const progress = useMemo(() => (habits.filter(h => h.completed).length / habits.length) * 100, [habits]);
-  const level = useMemo(() => (progress < 30 ? 1 : progress < 70 ? 2 : 3), [progress]);
-
-  const toggleHabit = (id) => {
-    setHabits(prev => prev.map(h => h.id === id ? { ...h, completed: !h.completed, streak: !h.completed ? h.streak + 1 : h.streak } : h));
-    spawnLeafParticles(document.body);
-  };
-
-  const [quote, setQuote] = useState("");
   useEffect(() => {
     const quotes = [
       "Small daily improvements lead to stunning results.",
@@ -113,9 +83,56 @@ const Dashboard = () => {
     requestAnimationFrame(raf);
     lenis.on("scroll", ScrollTrigger.update);
     ScrollTrigger.refresh();
-
-  
   }, []);
+
+  const progress = useMemo(() => (habits.filter(h => h.completed).length / habits.length) * 100, [habits]);
+  const level = useMemo(() => (progress < 30 ? 1 : progress < 70 ? 2 : 3), [progress]);
+
+  const onDeleteHabit = (id) => {
+    const updatedHabits = habits.filter(habit => habit.id !== id);
+    setHabits(updatedHabits);
+    localStorage.setItem("habits", JSON.stringify(updatedHabits));
+    toast.success("Habit deleted");
+  };
+
+  const onEditHabit = (id, updates) => {
+    const updatedHabits = habits.map(habit => 
+      habit.id === id ? { ...habit, ...updates } : habit
+    );
+    setHabits(updatedHabits);
+    localStorage.setItem("habits", JSON.stringify(updatedHabits));
+    toast.success("Habit updated");
+  };
+
+  const toggleHabit = (id) => {
+    setHabits(prev => 
+      prev.map(h => 
+        h.id === id 
+          ? { 
+              ...h, 
+              completed: !h.completed,
+              streak: !h.completed ? (h.streak + 1) : h.streak
+            } 
+          : h
+      )
+    );
+    spawnLeafParticles(document.body);
+    localStorage.setItem("habits", JSON.stringify(habits));
+  };
+
+  const HabitList = ({ habits, toggleHabit, onDelete, onEdit }) => (
+    <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+      {habits.map((habit) => (
+        <HabitCard 
+          key={habit.id} 
+          habit={habit} 
+          toggleHabit={toggleHabit}
+          onDelete={onDelete}
+          onEdit={onEdit}
+        />
+      ))}
+    </div>
+  );
 
   return (
     <div ref={containerRef} className="min-h-screen bg-gradient-to-b from-green-50 via-green-100 to-green-200 text-gray-900 dark:text-gray-100 dark:bg-gray-900 transition-colors duration-500">
@@ -148,11 +165,13 @@ const Dashboard = () => {
             <div className="h-full bg-green-500 transition-all duration-500" style={{ width: `${progress}%` }} />
           </div>
           {progress === 100 && (
-  <div className="mt-4 text-green-600 dark:text-green-400 font-semibold animate-bounce text-xl">
-    🎉 Congratulations! All habits completed!
-  </div>
-)}
-          <p className="mt-4 text-lg text-gray-700 dark:text-gray-300">{Math.round(progress)}% completed ({habits.filter(h => h.completed).length}/{habits.length})</p>
+            <div className="mt-4 text-green-600 dark:text-green-400 font-semibold animate-bounce text-xl">
+              🎉 Congratulations! All habits completed!
+            </div>
+          )}
+          <p className="mt-4 text-lg text-gray-700 dark:text-gray-300">
+            {Math.round(progress)}% completed ({habits.filter(h => h.completed).length}/{habits.length})
+          </p>
         </section>
 
         <section className="section bg-white dark:bg-gray-800 shadow-xl rounded-xl p-6">
@@ -160,7 +179,12 @@ const Dashboard = () => {
             <h3 className="text-2xl font-semibold">Today's Habits ✅</h3>
             <p className="text-sm text-gray-500 dark:text-gray-400">{new Date().toLocaleDateString()}</p>
           </div>
-          <HabitList habits={habits} toggleHabit={toggleHabit} />
+          <HabitList 
+            habits={habits} 
+            toggleHabit={toggleHabit} 
+            onDelete={onDeleteHabit}
+            onEdit={onEditHabit}
+          />
         </section>
 
         <section className="section bg-white dark:bg-gray-800 shadow-xl rounded-xl p-6">
@@ -175,7 +199,10 @@ const Dashboard = () => {
               </div>
             ))}
           </div>
-          <div className="flex justify-between text-sm text-gray-600 dark:text-gray-400"><span>Start of week</span><span>Today</span></div>
+          <div className="flex justify-between text-sm text-gray-600 dark:text-gray-400">
+            <span>Start of week</span>
+            <span>Today</span>
+          </div>
         </section>
 
         <section className="section bg-white dark:bg-gray-800 shadow-xl rounded-xl p-6">
@@ -183,8 +210,10 @@ const Dashboard = () => {
           <div className="space-y-4">
             {[...habits].sort((a,b)=>b.streak-a.streak).slice(0,3).map(habit => (
               <div key={habit.id} className="flex items-center justify-between p-4 bg-green-50 dark:bg-green-900/30 rounded-lg">
-                <span className="font-medium">{habit.title}</span>
-                <span className="text-sm bg-green-100 dark:bg-green-800 text-green-800 dark:text-green-200 px-3 py-1 rounded-full">{habit.streak}d</span>
+                <span className="font-medium">{habit.name}</span>
+                <span className="text-sm bg-green-100 dark:bg-green-800 text-green-800 dark:text-green-200 px-3 py-1 rounded-full">
+                  {habit.streak}d
+                </span>
               </div>
             ))}
           </div>
@@ -192,7 +221,12 @@ const Dashboard = () => {
 
         <section className="section bg-white dark:bg-gray-800 shadow-xl rounded-xl p-6 text-center">
           <blockquote className="italic text-xl text-gray-600 dark:text-gray-400 mb-4">"{quote}" 🌱</blockquote>
-          <button onClick={() => window.location.reload()} className="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors">New Quote</button>
+          <button 
+            onClick={() => window.location.reload()} 
+            className="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors"
+          >
+            New Quote
+          </button>
         </section>
       </main>
 

@@ -1,61 +1,86 @@
-import React, { useState } from "react";
-import { PlusCircle, RefreshCw, Calendar, Moon } from "lucide-react";
+import React, { useState, useEffect } from "react";
+import { PlusCircle, RefreshCw, Calendar, Moon, Trash2, Edit, X } from "lucide-react";
 import toast, { Toaster } from "react-hot-toast";
+import { useNavigate, useLocation } from "react-router-dom";
 
 const AddHabit = () => {
+  const location = useLocation();
+  const navigate = useNavigate();
   const [habitName, setHabitName] = useState("");
   const [emoji, setEmoji] = useState("🌱");
   const [frequency, setFrequency] = useState("Daily");
   const [isLoading, setIsLoading] = useState(false);
+  const [isEditing, setIsEditing] = useState(false);
+  const [currentHabitId, setCurrentHabitId] = useState(null);
+  
   const [habits, setHabits] = useState(() => {
     const stored = localStorage.getItem("habits");
     return stored ? JSON.parse(stored) : [];
   });
 
-  const addHabit = async () => {
+  // Check if we're editing from location state
+  useEffect(() => {
+    if (location.state?.habitToEdit) {
+      const { id, name, emoji, frequency } = location.state.habitToEdit;
+      setHabitName(name);
+      setEmoji(emoji);
+      setFrequency(frequency);
+      setCurrentHabitId(id);
+      setIsEditing(true);
+    }
+  }, [location.state]);
+
+  const handleSubmit = async () => {
     if (!habitName.trim()) return;
 
     setIsLoading(true);
     await new Promise((resolve) => setTimeout(resolve, 800));
 
-    const newHabit = {
-      id: Date.now(),
-      name: habitName.trim(),
-      emoji: emoji || "🌱",
-      frequency,
-    };
+    let updated;
+    if (isEditing) {
+      // Update existing habit
+      updated = habits.map(habit => 
+        habit.id === currentHabitId
+          ? { ...habit, name: habitName.trim(), emoji, frequency }
+          : habit
+      );
+      toast.success(`Updated "${habitName.trim()}"`);
+    } else {
+      // Add new habit
+      const newHabit = {
+        id: Date.now(),
+        name: habitName.trim(),
+        emoji: emoji || "🌱",
+        frequency,
+        completed: false,
+        streak: 0,
+      };
+      updated = [...habits, newHabit];
+      toast.success(`Added "${habitName.trim()}"`);
+    }
 
-    const updated = [...habits, newHabit];
     setHabits(updated);
     localStorage.setItem("habits", JSON.stringify(updated));
-
     setIsLoading(false);
+    navigate("/dashboard");
+    resetForm();
+  };
 
-    toast.custom((t) => (
-      <div
-        className={`${t.visible ? "animate-enter" : "animate-leave"} 
-        bg-white dark:bg-gray-800 shadow-lg rounded-lg pointer-events-auto flex ring-1 ring-black ring-opacity-5 p-4`}
-      >
-        <p className="text-sm font-medium text-gray-900 dark:text-white">
-          {emoji} Added "{habitName.trim()}"
-        </p>
-        <button
-          onClick={() => {
-            const filtered = habits.filter((h) => h.id !== newHabit.id);
-            setHabits(filtered);
-            localStorage.setItem("habits", JSON.stringify(filtered));
-            toast.dismiss(t.id);
-          }}
-          className="ml-4 text-sm text-green-600 dark:text-green-400 font-bold"
-        >
-          Undo
-        </button>
-      </div>
-    ));
+  const deleteHabit = (id) => {
+    const updated = habits.filter(habit => habit.id !== id);
+    setHabits(updated);
+    localStorage.setItem("habits", JSON.stringify(updated));
+    toast.success("Habit deleted");
+    resetForm();
+    if (isEditing) navigate("/dashboard");
+  };
 
+  const resetForm = () => {
     setHabitName("");
     setEmoji("🌱");
     setFrequency("Daily");
+    setIsEditing(false);
+    setCurrentHabitId(null);
   };
 
   return (
@@ -65,9 +90,20 @@ const AddHabit = () => {
       <div className="w-full max-w-4xl grid grid-cols-1 md:grid-cols-2 gap-10 p-8 bg-white dark:bg-gray-900 rounded-2xl shadow-2xl">
         {/* Form */}
         <div className="space-y-6">
-          <h2 className="text-3xl font-bold text-green-600 dark:text-green-300">
-            🌿 Add a New Habit
-          </h2>
+          <div className="flex justify-between items-center">
+            <h2 className="text-3xl font-bold text-green-600 dark:text-green-300">
+              {isEditing ? "✏️ Edit Habit" : "🌿 Add a New Habit"}
+            </h2>
+            {isEditing && (
+              <button
+                onClick={resetForm}
+                className="p-2 text-gray-500 hover:text-gray-700 dark:hover:text-gray-300"
+                aria-label="Cancel editing"
+              >
+                <X className="w-6 h-6" />
+              </button>
+            )}
+          </div>
 
           {/* Habit Name */}
           <div>
@@ -90,24 +126,9 @@ const AddHabit = () => {
             </label>
             <div className="grid grid-cols-6 gap-2 p-2 bg-gray-100 dark:bg-gray-800 rounded-xl">
               {[
-                "🌱",
-                "💧",
-                "🏃‍♀️",
-                "🧘‍♂️",
-                "📚",
-                "🍎",
-                "🌞",
-                "🧠",
-                "🎵",
-                "💤",
-                "🍀",
-                "✨",
-                "❤️",
-                "📅",
-                "🌍",
-                "🔥",
-                "🏋️",
-                "🧴",
+                "🌱", "💧", "🏃‍♀️", "🧘‍♂️", "📚", "🍎", 
+                "🌞", "🧠", "🎵", "💤", "🍀", "✨", 
+                "❤️", "📅", "🌍", "🔥", "🏋️", "🧴",
               ].map((e) => (
                 <button
                   key={e}
@@ -124,7 +145,6 @@ const AddHabit = () => {
             </div>
           </div>
 
-          {/* Frequency Selection */}
           {/* Frequency Selection */}
           <div>
             <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
@@ -161,7 +181,6 @@ const AddHabit = () => {
                     {item.icon}
                     {item.type}
                   </button>
-                  {/* Tooltip */}
                   <span className="absolute z-10 bottom-full mb-2 hidden group-hover:block px-2 py-1 text-xs bg-gray-800 dark:bg-gray-200 text-white dark:text-gray-800 rounded whitespace-nowrap">
                     {item.tooltip}
                   </span>
@@ -170,40 +189,52 @@ const AddHabit = () => {
             </div>
           </div>
 
-          {/* Add Button */}
-          <button
-            onClick={addHabit}
-            disabled={isLoading}
-            className={`w-full flex items-center justify-center gap-2 px-4 py-3 bg-green-500 hover:bg-green-600 text-white rounded-xl transition-all shadow-md ${
-              isLoading ? "opacity-75 cursor-not-allowed" : ""
-            }`}
-          >
-            {isLoading ? (
-              <svg
-                className="animate-spin -ml-1 mr-2 h-5 w-5 text-white"
-                xmlns="http://www.w3.org/2000/svg"
-                fill="none"
-                viewBox="0 0 24 24"
+          {/* Action Buttons */}
+          <div className="flex gap-3">
+            <button
+              onClick={handleSubmit}
+              disabled={isLoading}
+              className={`flex-1 flex items-center justify-center gap-2 px-4 py-3 bg-green-500 hover:bg-green-600 text-white rounded-xl transition-all shadow-md ${
+                isLoading ? "opacity-75 cursor-not-allowed" : ""
+              }`}
+            >
+              {isLoading ? (
+                <svg
+                  className="animate-spin -ml-1 mr-2 h-5 w-5 text-white"
+                  xmlns="http://www.w3.org/2000/svg"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                >
+                  <circle
+                    className="opacity-25"
+                    cx="12"
+                    cy="12"
+                    r="10"
+                    stroke="currentColor"
+                    strokeWidth="4"
+                  ></circle>
+                  <path
+                    className="opacity-75"
+                    fill="currentColor"
+                    d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+                  ></path>
+                </svg>
+              ) : (
+                <PlusCircle className="w-5 h-5" />
+              )}
+              {isLoading ? "Saving..." : isEditing ? "Update Habit" : "Add Habit"}
+            </button>
+
+            {isEditing && (
+              <button
+                onClick={() => deleteHabit(currentHabitId)}
+                className="px-4 py-3 bg-red-500 hover:bg-red-600 text-white rounded-xl transition-all shadow-md flex items-center justify-center gap-2"
               >
-                <circle
-                  className="opacity-25"
-                  cx="12"
-                  cy="12"
-                  r="10"
-                  stroke="currentColor"
-                  strokeWidth="4"
-                ></circle>
-                <path
-                  className="opacity-75"
-                  fill="currentColor"
-                  d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
-                ></path>
-              </svg>
-            ) : (
-              <PlusCircle className="w-5 h-5" />
+                <Trash2 className="w-5 h-5" />
+                Delete
+              </button>
             )}
-            {isLoading ? "Adding..." : "Add Habit"}
-          </button>
+          </div>
         </div>
 
         {/* Preview Card */}
