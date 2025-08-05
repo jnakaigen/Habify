@@ -1,10 +1,15 @@
-/** @type {import('tailwindcss').Config} */
 export default {
-  content: [  "./index.html",
-    "./src/**/*.{js,jsx}"],
+  darkMode: "class", // use class-based dark mode
+  content: [
+    "./index.html",
+    "./src/**/*.{js,jsx}"
+  ],
   theme: {
-    extend: {},
+    extend: {
+      colors: {
+        accent: 'var(--accent-color)', // ✅ add this line
+      },
+    },
   },
   plugins: [],
-}
-
+};
