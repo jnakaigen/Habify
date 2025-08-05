@@ -9,6 +9,7 @@ import plantAnimation from "../assets/animations/plantgrowth.json";
 import "../styles/tailwind.css";
 import HabitCard from "../components/HabitCard";
 import toast from "react-hot-toast";
+import { PlusCircle } from "lucide-react";
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -136,9 +137,18 @@ const Dashboard = () => {
 
   return (
     <div ref={containerRef} className="min-h-screen bg-gradient-to-b from-green-50 via-green-100 to-green-200 text-gray-900 dark:text-gray-100 dark:bg-gray-900 transition-colors duration-500">
-      <header className="sticky top-0 bg-white/80 dark:bg-gray-900/80 backdrop-blur-xl p-6 z-20 shadow-lg flex justify-center">
-        <h1 className="text-3xl font-extrabold text-green-700 drop-shadow">🌱 Habify Dashboard</h1>
-      </header>
+      <header className="sticky top-0 bg-white/80 dark:bg-gray-900/80 backdrop-blur-xl p-6 z-20 shadow-lg flex justify-center items-center">
+  <h1 className="text-3xl font-extrabold text-green-700 drop-shadow">
+    🌱 Habify Dashboard
+  </h1>
+  <button
+    onClick={() => navigate("/add")}
+    className="absolute right-6 flex items-center gap-2 px-4 py-2 bg-green-600 hover:bg-green-700 text-white rounded-lg transition-colors shadow-md"
+  >
+    <PlusCircle className="w-5 h-5" />
+    Add Habit
+  </button>
+</header>
 
       <main className="container mx-auto px-4 pb-20 space-y-16">
         <section className="section flex flex-col items-center text-center p-8">
