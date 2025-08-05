@@ -10,6 +10,8 @@ import "../styles/tailwind.css";
 import HabitCard from "../components/HabitCard";
 import toast from "react-hot-toast";
 import { PlusCircle } from "lucide-react";
+import Layout from '../components/Layout';
+
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -136,6 +138,7 @@ const Dashboard = () => {
   );
 
   return (
+    <Layout>
     <div ref={containerRef} className="min-h-screen bg-gradient-to-b from-green-50 via-green-100 to-green-200 text-gray-900 dark:text-gray-100 dark:bg-gray-900 transition-colors duration-500">
       <header className="sticky top-0 bg-white/80 dark:bg-gray-900/80 backdrop-blur-xl p-6 z-20 shadow-lg flex justify-center items-center">
   <h1 className="text-3xl font-extrabold text-green-700 drop-shadow">
@@ -244,6 +247,7 @@ const Dashboard = () => {
         <p>🌿 Built with love & growth — Habify 2025</p>
       </footer>
     </div>
+    </Layout>
   );
 };
 
