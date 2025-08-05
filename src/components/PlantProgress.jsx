@@ -1,12 +1,41 @@
-import React from 'react';
-import Lottie from 'lottie-react';
-import plantgrowth from '../assets/animations/plantgrowth.json';
+import React, { useEffect, useRef } from "react";
+import Lottie from "lottie-react";
+import plantGrowth from "../assets/animations/plantgrowth.json";
+import { gsap } from "gsap";
 
-const PlantProgress = () => {
+const PlantProgress = ({ progress }) => {
+  const lottieRef = useRef();
+
+  useEffect(() => {
+    const lottieInstance = lottieRef.current?.getLottie?.();
+    if (lottieInstance && lottieInstance.totalFrames) {
+      const totalFrames = lottieInstance.totalFrames;
+      const targetFrame = (progress / 100) * totalFrames;
+
+      gsap.to(
+        { frame: lottieInstance.currentFrame },
+        {
+          frame: targetFrame,
+          duration: 1,
+          ease: "power2.out",
+          onUpdate: function () {
+            lottieInstance.goToAndStop(this.targets()[0].frame, true);
+          },
+        }
+      );
+    }
+  }, [progress]);
+
   return (
-    <div className="w-64 h-64 flex flex-col items-center justify-center bg-white shadow-lg rounded-lg">
-      <Lottie animationData={plantgrowth} loop autoplay />
-      <p className="mt-4 text-green-600 font-semibold">Your habit is growing 🌱</p>
+    <div className="w-full flex flex-col items-center">
+      <Lottie
+        lottieRef={lottieRef}
+        animationData={plantGrowth}
+        loop={false}
+        autoplay={false}
+        style={{ width: 120, height: 120 }}
+      />
+      <span className="mt-2 text-green-700 font-bold">{Math.round(progress)}%</span>
     </div>
   );
 };

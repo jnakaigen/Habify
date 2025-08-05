@@ -14,7 +14,8 @@ export default function Login() {
       alert("Bro, don’t leave fields empty!");
       return;
     }
-
+     // only change 
+  localStorage.setItem("userEmail", email);
     // Simulate login success → redirect
     navigate("/dashboard");
   };
