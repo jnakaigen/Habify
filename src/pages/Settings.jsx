@@ -5,7 +5,7 @@ export default function SettingsPage() {
   const { theme, setTheme } = useContext(ThemeContext);
   const { accent, setAccent } = useContext(ThemeContext);
   const { density, setDensity } = useContext(ThemeContext);
-  const [email, setEmail] = useState('janaki.designspace@gmail.com');
+  const [email, setEmail] = useState('');
   const [reminders, setReminders] = useState(true);
   const [marketing, setMarketing] = useState(false);
   const [inApp, setInApp] = useState(true);
@@ -13,19 +13,18 @@ export default function SettingsPage() {
   const [reminderMsg, setReminderMsg] = useState('');
   const [marketingMsg, setMarketingMsg] = useState('');
   const [inAppMsg, setInAppMsg] = useState('');
-<<<<<<< HEAD
+
 const [showPasswordBox, setShowPasswordBox] = useState(false);
 const [showEmailBox, setShowEmailBox] = useState(false);
 const [showProfileBox, setShowProfileBox] = useState(true);
   // Determine dynamic background for containers
-=======
+
 
   
   const [resetMsg, setResetMsg] = useState('');
   const [exportMsg, setExportMsg] = useState('');
   const [policyMsg, setPolicyMsg] = useState('');
 
->>>>>>> 0d36c89565d459d824fb659c9f64fcb09aa42468
   const containerBg = accent === 'green' ? 'bg-[#a0d29d]' : 'bg-[#d1c1f1]';
 
   useEffect(() => {
