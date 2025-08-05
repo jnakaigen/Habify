@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from "react";
 import { PlusCircle, RefreshCw, Calendar, Moon, Trash2, Edit, X } from "lucide-react";
 import toast, { Toaster } from "react-hot-toast";
-import { useNavigate, useLocation } from "react-router-dom";
 import Layout from '../components/Layout';
+import { useNavigate, useLocation } from "react-router-dom";
 
 const AddHabit = () => {
   const location = useLocation();
