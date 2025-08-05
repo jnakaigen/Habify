@@ -5,7 +5,12 @@ export default function SettingsPage() {
   const { theme, setTheme } = useContext(ThemeContext);
   const { accent, setAccent } = useContext(ThemeContext);
   const { density, setDensity } = useContext(ThemeContext);
-  const [email, setEmail] = useState('janaki.designspace@gmail.com');
+  const [email, setEmail] = useState(() => {
+    return localStorage.getItem('email') || '';
+  });
+    useEffect(() => {
+    localStorage.setItem('email', email);
+  }, [email]);
   const [reminders, setReminders] = useState(true);
   const [marketing, setMarketing] = useState(false);
   const [inApp, setInApp] = useState(true);
@@ -14,7 +19,17 @@ export default function SettingsPage() {
   const [marketingMsg, setMarketingMsg] = useState('');
   const [inAppMsg, setInAppMsg] = useState('');
 
+const [showPasswordBox, setShowPasswordBox] = useState(false);
+const [showEmailBox, setShowEmailBox] = useState(false);
+const [showProfileBox, setShowProfileBox] = useState(true);
   // Determine dynamic background for containers
+
+
+  
+  const [resetMsg, setResetMsg] = useState('');
+  const [exportMsg, setExportMsg] = useState('');
+  const [policyMsg, setPolicyMsg] = useState('');
+
   const containerBg = accent === 'green' ? 'bg-[#a0d29d]' : 'bg-[#d1c1f1]';
 
   useEffect(() => {
@@ -28,6 +43,18 @@ export default function SettingsPage() {
   useEffect(() => {
     if (inAppMsg) setTimeout(() => setInAppMsg(''), 2000);
   }, [inAppMsg]);
+
+  useEffect(() => {
+  if (resetMsg) setTimeout(() => setResetMsg(''), 2000);
+}, [resetMsg]);
+
+useEffect(() => {
+  if (exportMsg) setTimeout(() => setExportMsg(''), 2000);
+}, [exportMsg]);
+
+useEffect(() => {
+  if (policyMsg) setTimeout(() => setPolicyMsg(''), 2000);
+}, [policyMsg]);
 
   return (
     <div className={`min-h-screen ${density === 'default' ? 'p-8' : 'p-4'} font-sans ${theme === 'light' ? 'bg-[#FAFAFC] text-[#1F1F2E]' : 'bg-[#1F1F2E] text-[#FAFAFC]'}`}>
@@ -70,32 +97,7 @@ export default function SettingsPage() {
         </div>
       </section>
 
-      {/* Account Settings */}
-      <section className="mb-8">
-        <h2 className="text-xl font-semibold mb-4">Account Settings</h2>
-        <div className="grid md:grid-cols-3 gap-4">
-          <div className={`p-4 border border-[#E0E0F0] rounded-lg ${containerBg}`}>
-            <p className="font-medium mb-2">Change Password</p>
-            <p className="text-sm text-gray-600 mb-2">Update your password regularly to keep your account secure.</p>
-            <button className="text-white bg-[#A37CF0] px-3 py-1 rounded">Change Password</button>
-          </div>
-
-          <div className={`p-4 border border-[#E0E0F0] rounded-lg ${containerBg}`}>
-            <p className="font-medium mb-2">Update Email</p>
-            <p className="text-sm text-gray-600 mb-2">Modify the email linked to your account for communication and verification.</p>
-            <input type="email" value={email} onChange={(e) => setEmail(e.target.value)} className="border p-1 rounded w-full mb-2" />
-            <button className="text-white bg-[#0B7557] px-3 py-1 rounded">Save</button>
-          </div>
-
-          <div className={`p-4 border border-[#E0E0F0] rounded-lg ${containerBg}`}>
-            <p className="font-medium mb-2">Profile Visibility</p>
-            <p className="text-sm text-gray-600 mb-2">Set whether your profile is visible to other users in the app.</p>
-            <button className="text-white bg-[#1F1F2E] px-3 py-1 rounded">Public Profile</button>
-          </div>
-        </div>
-      </section>
-
-      {/* Notifications */}
+          {/* Notifications */}
       <section className="mb-8">
         <h2 className="text-xl font-semibold mb-4">Notifications & Reminders</h2>
         <div className="grid md:grid-cols-3 gap-4">
@@ -164,6 +166,107 @@ export default function SettingsPage() {
         </div>
       </section>
 
+       {/* Account Settings */}
+<section className="mb-8">
+  <h2 className="text-xl font-semibold mb-4">Account Settings</h2>
+  <div className="grid md:grid-cols-3 gap-4">
+
+  
+ {/* Change Password */}
+<div className={`p-4 border border-[#E0E0F0] rounded-lg ${containerBg}`}>
+  <p className="font-medium mb-2">Change Password</p>
+  <p className="text-sm text-gray-600 mb-2">
+    Update your password regularly to keep your account secure.
+  </p>
+  <button 
+    onClick={() => setShowPasswordBox(!showPasswordBox)} 
+    className="text-white bg-[#A37CF0] px-3 py-1 rounded">
+    Change Password
+  </button>
+  {showPasswordBox && (
+    <div className="mt-3 p-3 bg-[#E4F7E7] rounded border border-[#0B7557] text-sm text-gray-700">
+      <label className="block mb-2 font-medium" htmlFor="new-password">Enter your new password:</label>
+      <input
+        id="new-password"
+        type="password"
+        className="border p-1 rounded w-full mb-2"
+        placeholder="New password"
+      />
+      <button 
+        onClick={() => setShowPasswordBox(false)} 
+        className="bg-[#0B7557] text-white px-3 py-1 rounded">
+        Save Password
+      </button>
+    </div>
+  )}
+</div>
+
+ {/* Update Email */}
+<div className={`p-4 border border-[#E0E0F0] rounded-lg ${containerBg}`}>
+  <p className="font-medium mb-2">Update Email</p>
+  <p className="text-sm text-gray-600 mb-2">
+    Modify the email linked to your account for communication and verification.
+  </p>
+  <input 
+    type="email" 
+    value={email} 
+    onChange={(e) => setEmail(e.target.value)} 
+    className="border p-1 rounded w-full mb-2" 
+  />
+  <button 
+    onClick={() => {
+      setShowEmailBox(true);
+      setTimeout(() => setShowEmailBox(false), 2000); // Auto-hide after 2 seconds
+    }} 
+    className="text-white bg-[#0B7557] px-3 py-1 rounded">
+    Save
+  </button>
+  {showEmailBox && (
+    <div className="mt-3 p-3 bg-[#E4F7E7] rounded border border-[#0B7557] text-sm text-gray-700">
+      ✅ Email updated locally to: <strong>{email}</strong>.
+    </div>
+  )}
+</div>
+
+{/* Profile Visibility */}
+<div className={`p-4 border border-[#E0E0F0] rounded-lg ${containerBg}`}>
+  <p className="font-medium mb-2">Profile Visibility</p>
+  <p className="text-sm text-gray-600 mb-2">
+    Set whether your profile is visible to other users in the app.
+  </p>
+  <div className="flex items-center gap-4">
+    <label className="flex items-center cursor-pointer">
+      <input
+        type="radio"
+        name="profileVisibility"
+        checked={showProfileBox} // true means public
+        onChange={() => setShowProfileBox(true)}
+        className="h-4 w-4 text-[#0B7557] focus:ring-[#0B7557]"
+      />
+      <span className="ml-2">Public</span>
+    </label>
+    <label className="flex items-center cursor-pointer">
+      <input
+        type="radio"
+        name="profileVisibility"
+        checked={!showProfileBox} // false means private
+        onChange={() => setShowProfileBox(false)}
+        className="h-4 w-4 text-[#0B7557] focus:ring-[#0B7557]"
+      />
+      <span className="ml-2">Private</span>
+    </label>
+  </div>
+  <div className={`mt-3 p-3 bg-[#E4F7E7] rounded border ${showProfileBox ? 'border-[#0B7557]' : 'border-[#1F1F2E]'} text-sm text-gray-700 ${showProfileBox !== null ? 'block' : 'hidden'}`}>
+    {showProfileBox ? (
+      <>👁️ Profile is currently set to <strong>Public</strong>. All users can view your profile.</>
+    ) : (
+      <>🔒 Profile is currently set to <strong>Private</strong>. Only you can view your profile.</>
+    )}
+  </div>
+</div>
+ </div>
+</section>
+
       {/* Data Management */}
       <section className="mb-8">
         <h2 className="text-xl font-semibold mb-4">Data Management</h2>
@@ -171,19 +274,38 @@ export default function SettingsPage() {
           <div className={`p-4 border border-[#E0E0F0] rounded-lg ${containerBg}`}>
             <p className="font-medium mb-2">Reset Application Data</p>
             <p className="text-sm text-gray-600 mb-2">Clear all your app activity and preferences to start fresh.</p>
-            <button className="text-white bg-[#DE4848] px-3 py-1 rounded">Reset All Data</button>
+            <button
+              className="text-white bg-[#DE4848] px-3 py-1 rounded"
+              onClick={() => setResetMsg('Resetting all application data...')}
+            >
+              Reset All Data
+            </button>
+            {resetMsg && <p className="mt-2 text-xs font-semibold">{resetMsg}</p>}
           </div>
 
           <div className={`p-4 border border-[#E0E0F0] rounded-lg ${containerBg}`}>
             <p className="font-medium mb-2">Export My Data</p>
             <p className="text-sm text-gray-600 mb-2">Download your saved activity and preferences to a file.</p>
-            <button className="text-white bg-[#353543] px-3 py-1 rounded">Export Data</button>
+            <button
+              className="text-white bg-[#353543] px-3 py-1 rounded"
+              onClick={() => setExportMsg('Exporting your data...')}
+
+            >
+              Export Data
+            </button>
+             {exportMsg && <p className="mt-2 text-xs font-semibold">{exportMsg}</p>}
           </div>
 
           <div className={`p-4 border border-[#E0E0F0] rounded-lg ${containerBg}`}>
             <p className="font-medium mb-2">Data Retention Policy</p>
             <p className="text-sm text-gray-600 mb-2">Review how long your data is kept and how it’s handled.</p>
-            <button className="text-white bg-[#4D78E0] px-3 py-1 rounded">View Policy</button>
+            <button
+              className="text-white bg-[#4D78E0] px-3 py-1 rounded"
+               onClick={() => setPolicyMsg('Opening data retention policy...')}
+            >
+              View Policy
+            </button>
+            {policyMsg && <p className="mt-2 text-xs font-semibold">{policyMsg}</p>}
           </div>
         </div>
       </section>
