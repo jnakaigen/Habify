@@ -141,7 +141,7 @@ const Landing = () => {
 
       {/* Habit Widgets Section */}
       <section className="w-full py-20 px-6 text-center">
-        <h2 className="text-3xl font-bold text-white mb-12">Your Habit Dashboard</h2>
+        <h2 className="text-3xl font-bold text-white mb-12">Habify Features</h2>
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-6 max-w-6xl mx-auto">
           <div className="bg-green-100 text-green-900 p-6 rounded-xl shadow-md flex flex-col items-center">
             <span className="text-4xl mb-2">📚</span>

@@ -23,7 +23,7 @@ export default function Login() {
       return;
     }
     localStorage.setItem("userEmail", email);
-    // Simulated login
+   console.log("User logged in:", { username, email });
     navigate("/dashboard");
   };
 
