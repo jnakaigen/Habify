@@ -1,4 +1,3 @@
-/** @type {import('tailwindcss').Config} */
 export default {
   darkMode: "class", // instead of "media"
   content: [  "./index.html",
@@ -8,4 +7,3 @@ export default {
   },
   plugins: [],
 }
-
