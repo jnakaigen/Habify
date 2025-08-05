@@ -1,4 +1,4 @@
-:root {
+/*:root {
   font-family: system-ui, Avenir, Helvetica, Arial, sans-serif;
   line-height: 1.5;
   font-weight: 400;
@@ -64,5 +64,139 @@ button:focus-visible {
   }
   button {
     background-color: #f9f9f9;
+  }
+}*/
+/* Reset default styles and make elements more predictable */
+/* Universal Reset and Box Model */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+/* Ensure root fills screen */
+html,
+body,
+#root {
+  height: 100vh; /* Ensures it fills viewport height */
+  width: 100vw;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  background-color: #1e1e2f;
+  color: #ffffff;
+  overflow: hidden; /* Optional: Prevent scrollbars if everything fits */
+}
+
+/* Flexbox Centering */
+body {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Login Container */
+.login-container {
+  background-color: #2c2c3e;
+  padding: 2rem;
+  width: 100%;
+  max-width: 420px;
+  border-radius: 12px;
+  box-shadow: 0 0 25px rgba(0, 0, 0, 0.2);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  min-height: 60vh;
+}
+
+/* Headings */
+.login-container h1 {
+  margin-bottom: 1.5rem;
+  font-size: 2rem;
+  text-align: center;
+}
+
+/* Form Styles */
+.login-form {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+.login-form input {
+  padding: 0.75rem;
+  margin-bottom: 1rem;
+  border: none;
+  border-radius: 6px;
+  font-size: 1rem;
+  background-color: #404054;
+  color: #fff;
+}
+
+.login-form input::placeholder {
+  color: #aaa;
+}
+
+.login-form button {
+  padding: 0.75rem;
+  background-color: #646cff;
+  color: #fff;
+  font-weight: bold;
+  font-size: 1rem;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.login-form button:hover {
+  background-color: #4c4df0;
+}
+
+/* Links */
+.login-links {
+  text-align: center;
+  margin-top: 1rem;
+}
+
+.login-links a {
+  color: #aab8ff;
+  text-decoration: none;
+  font-size: 0.9rem;
+}
+
+.login-links a:hover {
+  text-decoration: underline;
+}
+
+/* Light Theme Support */
+@media (prefers-color-scheme: light) {
+  html,
+  body {
+    background-color: #f0f0f5;
+    color: #000;
+  }
+
+  .login-container {
+    background-color: #fff;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
+  }
+
+  .login-form input {
+    background-color: #f2f2f2;
+    color: #000;
+  }
+
+  .login-form input::placeholder {
+    color: #666;
+  }
+
+  .login-form button {
+    background-color: #646cff;
+  }
+
+  .login-links a {
+    color: #4c4df0;
   }
 }
