@@ -314,9 +314,9 @@ useEffect(() => {
       <section className="mb-8">
         <h2 className="text-xl font-semibold mb-4 text-center">About This App</h2>
         <div className={`p-6 border border-[#E0E0F0] rounded-lg ${containerBg} text-center text-sm text-[#1F1F2E]`}>
-          <p className="mb-1">GreenSpace is a modern application designed to help you manage your daily tasks efficiently and beautifully.</p>
-          <p className="mb-1 font-medium">Version: 1.2.0</p>
-          <p className="mb-2 font-semibold">Developed with passion by GreenSpace Innovations Team.</p>
+          <p className="mb-1">Habify is a modern application designed to help you manage your daily tasks efficiently and beautifully.</p>
+          <p className="mb-1 font-medium">Version: 1.0.0</p>
+          <p className="mb-2 font-semibold">Developed with passion by Bytezen Team.</p>
           <p className="text-xs">This user interface design is a demonstration of sophisticated web application design using React, TypeScript, Tailwind CSS, and shadcn/ui components.</p>
           <div className="w-16 h-16 bg-gray-200 mx-auto mt-4 rounded"><span className="text-gray-400 text-2xl">🖼️</span></div>
         </div>
