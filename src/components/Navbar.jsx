@@ -1,20 +1,51 @@
 import React from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
-const Navbar = () => (
-  <nav style={{ padding: "1rem", background: "#f5f5f5", borderBottom: "1px solid #ddd" }}>
-    <ul style={{ display: "flex", gap: "1rem", listStyle: "none", margin: 0, padding: 0 }}>
-      <li>
-        <Link to="/dashboard">Dashboard</Link>
-      </li>
-      <li>
-        <Link to="/add">Add Habit</Link>
-      </li>
-      <li>
-        <Link to="/settings">Settings</Link>
-      </li>
-    </ul>
-  </nav>
-);
+const Navbar = () => {
+  const navigate = useNavigate();
+
+  const handleLogout = () => {
+    // Clear any auth state if needed
+    navigate("/login");
+  };
+
+  return (
+    <nav className="flex items-center justify-between px-6 py-3 bg-white shadow-md">
+      {/* Logo on the left */}
+      <div className="text-xl font-bold text-green-600 tracking-wide">
+        HabitTracker
+      </div>
+
+      {/* Links + Logout on the right */}
+      <div className="flex items-center gap-6">
+        <ul className="flex gap-6 text-gray-700 font-medium">
+          <li>
+            <Link to="/dashboard" className="hover:text-green-600 transition-colors">
+              Dashboard
+            </Link>
+          </li>
+          <li>
+            <Link to="/add" className="hover:text-green-600 transition-colors">
+              Add Habit
+            </Link>
+          </li>
+          <li>
+            <Link to="/settings" className="hover:text-green-600 transition-colors">
+              Settings
+            </Link>
+          </li>
+        </ul>
+
+        {/* Logout Button */}
+        <button
+          onClick={handleLogout}
+          className="px-4 py-2 bg-green-600 text-white rounded-lg shadow hover:bg-green-700 transition-all"
+        >
+          Logout
+        </button>
+      </div>
+    </nav>
+  );
+};
 
 export default Navbar;
