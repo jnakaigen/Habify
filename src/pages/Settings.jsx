@@ -13,6 +13,12 @@ export default function SettingsPage() {
   const [reminderMsg, setReminderMsg] = useState('');
   const [marketingMsg, setMarketingMsg] = useState('');
   const [inAppMsg, setInAppMsg] = useState('');
+
+  
+  const [resetMsg, setResetMsg] = useState('');
+  const [exportMsg, setExportMsg] = useState('');
+  const [policyMsg, setPolicyMsg] = useState('');
+
 const [showPasswordBox, setShowPasswordBox] = useState(false);
 const [showEmailBox, setShowEmailBox] = useState(false);
 const [showProfileBox, setShowProfileBox] = useState(true);
@@ -30,6 +36,18 @@ const [showProfileBox, setShowProfileBox] = useState(true);
   useEffect(() => {
     if (inAppMsg) setTimeout(() => setInAppMsg(''), 2000);
   }, [inAppMsg]);
+
+  useEffect(() => {
+  if (resetMsg) setTimeout(() => setResetMsg(''), 2000);
+}, [resetMsg]);
+
+useEffect(() => {
+  if (exportMsg) setTimeout(() => setExportMsg(''), 2000);
+}, [exportMsg]);
+
+useEffect(() => {
+  if (policyMsg) setTimeout(() => setPolicyMsg(''), 2000);
+}, [policyMsg]);
 
   return (
     <div className={`min-h-screen ${density === 'default' ? 'p-8' : 'p-4'} font-sans ${theme === 'light' ? 'bg-[#FAFAFC] text-[#1F1F2E]' : 'bg-[#1F1F2E] text-[#FAFAFC]'}`}>
@@ -249,19 +267,38 @@ const [showProfileBox, setShowProfileBox] = useState(true);
           <div className={`p-4 border border-[#E0E0F0] rounded-lg ${containerBg}`}>
             <p className="font-medium mb-2">Reset Application Data</p>
             <p className="text-sm text-gray-600 mb-2">Clear all your app activity and preferences to start fresh.</p>
-            <button className="text-white bg-[#DE4848] px-3 py-1 rounded">Reset All Data</button>
+            <button
+              className="text-white bg-[#DE4848] px-3 py-1 rounded"
+              onClick={() => setResetMsg('Resetting all application data...')}
+            >
+              Reset All Data
+            </button>
+            {resetMsg && <p className="mt-2 text-xs font-semibold">{resetMsg}</p>}
           </div>
 
           <div className={`p-4 border border-[#E0E0F0] rounded-lg ${containerBg}`}>
             <p className="font-medium mb-2">Export My Data</p>
             <p className="text-sm text-gray-600 mb-2">Download your saved activity and preferences to a file.</p>
-            <button className="text-white bg-[#353543] px-3 py-1 rounded">Export Data</button>
+            <button
+              className="text-white bg-[#353543] px-3 py-1 rounded"
+              onClick={() => setExportMsg('Exporting your data...')}
+
+            >
+              Export Data
+            </button>
+             {exportMsg && <p className="mt-2 text-xs font-semibold">{exportMsg}</p>}
           </div>
 
           <div className={`p-4 border border-[#E0E0F0] rounded-lg ${containerBg}`}>
             <p className="font-medium mb-2">Data Retention Policy</p>
             <p className="text-sm text-gray-600 mb-2">Review how long your data is kept and how it’s handled.</p>
-            <button className="text-white bg-[#4D78E0] px-3 py-1 rounded">View Policy</button>
+            <button
+              className="text-white bg-[#4D78E0] px-3 py-1 rounded"
+               onClick={() => setPolicyMsg('Opening data retention policy...')}
+            >
+              View Policy
+            </button>
+            {policyMsg && <p className="mt-2 text-xs font-semibold">{policyMsg}</p>}
           </div>
         </div>
       </section>
