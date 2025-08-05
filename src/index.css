@@ -1,0 +1,4 @@
+/* tailwind.css or index.css */
+body {
+  @apply bg-[#FAFAFC] text-[#1F1F2E] dark:bg-[#1F1F2E] dark:text-[#FAFAFC];
+}

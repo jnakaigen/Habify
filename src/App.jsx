@@ -5,6 +5,7 @@ import Landing from "./pages/Landing";
 import Login from "./pages/Login";
 import Dashboard from "./pages/Dashboard";
 import AddHabit from "./pages/AddHabit";
+import Settings from "./pages/Settings";
 import "./styles/tailwind.css";
 
 const App = () => {
@@ -20,10 +21,10 @@ const App = () => {
         <Route path="/login" element={<Login />} />
         <Route path="/dashboard" element={<Dashboard />} />
         <Route path="/add" element={<AddHabit />} />
-        {/* Add settings route if needed */}
+        <Route path="/settings" element={<Settings />} /> {/* Route for the Settings page */}
       </Routes>
     </div>
   );
 };
 
-export default App;
+export default App; // Export the App component as default
