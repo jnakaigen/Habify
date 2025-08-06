@@ -13,10 +13,12 @@ export default function SettingsPage() {
   const [reminderMsg, setReminderMsg] = useState('');
   const [marketingMsg, setMarketingMsg] = useState('');
   const [inAppMsg, setInAppMsg] = useState('');
+
   const [showPasswordBox, setShowPasswordBox] = useState(false);
   const [showEmailBox, setShowEmailBox] = useState(false);
   const [showProfileBox, setShowProfileBox] = useState(true);
   // Determine dynamic background for containers
+
 
 
   
@@ -24,6 +26,11 @@ export default function SettingsPage() {
   const [exportMsg, setExportMsg] = useState('');
   const [policyMsg, setPolicyMsg] = useState('');
 
+
+
+
+
+  // Determine dynamic background for containers
 
   const containerBg = accent === 'green' ? 'bg-[#a0d29d]' : 'bg-[#d1c1f1]';
 
