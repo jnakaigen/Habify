@@ -5,7 +5,12 @@ export default function SettingsPage() {
   const { theme, setTheme } = useContext(ThemeContext);
   const { accent, setAccent } = useContext(ThemeContext);
   const { density, setDensity } = useContext(ThemeContext);
-  const [email, setEmail] = useState('janaki.designspace@gmail.com');
+  const [email, setEmail] = useState(() => {
+    return localStorage.getItem('email') || '';
+  });
+    useEffect(() => {
+    localStorage.setItem('email', email);
+  }, [email]);
   const [reminders, setReminders] = useState(true);
   const [marketing, setMarketing] = useState(false);
   const [inApp, setInApp] = useState(true);
@@ -14,10 +19,14 @@ export default function SettingsPage() {
   const [marketingMsg, setMarketingMsg] = useState('');
   const [inAppMsg, setInAppMsg] = useState('');
 
+
   const [showPasswordBox, setShowPasswordBox] = useState(false);
   const [showEmailBox, setShowEmailBox] = useState(false);
   const [showProfileBox, setShowProfileBox] = useState(true);
   // Determine dynamic background for containers
+
+
+
 
 
 
@@ -30,7 +39,9 @@ export default function SettingsPage() {
 
 
 
+
   // Determine dynamic background for containers
+
 
   const containerBg = accent === 'green' ? 'bg-[#a0d29d]' : 'bg-[#d1c1f1]';
 
@@ -175,7 +186,7 @@ useEffect(() => {
 
   
  {/* Change Password */}
-<div className="p-4 border border-[#E0E0F0] rounded-lg bg-[#a0d29d]">
+<div className={`p-4 border border-[#E0E0F0] rounded-lg ${containerBg}`}>
   <p className="font-medium mb-2">Change Password</p>
   <p className="text-sm text-gray-600 mb-2">
     Update your password regularly to keep your account secure.
@@ -204,7 +215,7 @@ useEffect(() => {
 </div>
 
  {/* Update Email */}
-<div className="p-4 border border-[#E0E0F0] rounded-lg bg-[#a0d29d]">
+<div className={`p-4 border border-[#E0E0F0] rounded-lg ${containerBg}`}>
   <p className="font-medium mb-2">Update Email</p>
   <p className="text-sm text-gray-600 mb-2">
     Modify the email linked to your account for communication and verification.
@@ -231,7 +242,7 @@ useEffect(() => {
 </div>
 
 {/* Profile Visibility */}
-<div className="p-4 border border-[#E0E0F0] rounded-lg bg-[#a0d29d]">
+<div className={`p-4 border border-[#E0E0F0] rounded-lg ${containerBg}`}>
   <p className="font-medium mb-2">Profile Visibility</p>
   <p className="text-sm text-gray-600 mb-2">
     Set whether your profile is visible to other users in the app.
